@@ -37,13 +37,8 @@ public class ClienteController {
 				.orElse(ResponseEntity.notFound().build());
 		
 	}		
-	//	Optional<Cliente> cliente =  clienteRepository.findById(clienteId);
-		
-	//	 if (cliente.isPresent()) {
-		//	 return ResponseEntity.ok(cliente.get());
-	//	 } 
-	//	 
-		// return ResponseEntity.notFound().build();
-	}
+	
+	
+}
 
 
