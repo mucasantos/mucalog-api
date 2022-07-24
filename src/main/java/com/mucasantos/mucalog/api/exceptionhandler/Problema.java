@@ -31,7 +31,7 @@ public static class Campo {
 		public void setMensagem(String mensagem) {
 			this.mensagem = mensagem;
 		}
-	}
+}
 	
 	
 	public List<Campo> getCampos() {
