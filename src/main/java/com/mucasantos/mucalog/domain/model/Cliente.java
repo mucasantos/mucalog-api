@@ -1,4 +1,4 @@
-package com.mucasantos.mucalog.model;
+package com.mucasantos.mucalog.domain.model;
 
 import java.util.Objects;
 

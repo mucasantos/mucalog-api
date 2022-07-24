@@ -19,8 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mucasantos.mucalog.domain.model.Cliente;
 import com.mucasantos.mucalog.domain.repository.ClienteRepository;
-import com.mucasantos.mucalog.model.Cliente;
+import com.mucasantos.mucalog.domain.service.CadastroClienteService;
 
 @RestController
 @RequestMapping("/clientes")
@@ -28,6 +29,9 @@ public class ClienteController {
 	
 	@Autowired
 	private ClienteRepository clienteRepository;
+	
+	@Autowired
+	private CadastroClienteService cadastroClienteService;
 	
 	@GetMapping
 	public List<Cliente> listar() {
@@ -51,7 +55,7 @@ public class ClienteController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cliente adicionar (@Valid @RequestBody Cliente cliente) {
 	
-		return clienteRepository.save(cliente);
+		return cadastroClienteService.salvar(cliente);
 	}
 	
 	@PutMapping("/{clienteId}")
@@ -63,8 +67,7 @@ public class ClienteController {
 		}
 		
 		cliente.setId(clienteId);
-		cliente = clienteRepository.save(cliente);
-		
+		cliente = cadastroClienteService.salvar(cliente);		
 		return ResponseEntity.ok(cliente);
 	}
 	
@@ -75,8 +78,7 @@ public class ClienteController {
 			return ResponseEntity.notFound().build();
 		}
 		
-		 clienteRepository.deleteById(clienteId);
-		 
+		cadastroClienteService.excluir(clienteId);		 
 		 return ResponseEntity.noContent().build();
 	}
 }
