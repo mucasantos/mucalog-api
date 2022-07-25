@@ -52,6 +52,7 @@ public class Entrega {
 	@JsonProperty(access = Access.READ_ONLY)
 	private LocalDateTime dataFinalizacao;
 	
+	public Entrega() {}
 	
 	
 	public Entrega(Long id, Cliente cliente, Destinatario destinatario, StatusEntrega statusEntrega, BigDecimal taxa,
