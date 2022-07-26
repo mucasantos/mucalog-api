@@ -3,8 +3,6 @@ package com.mucasantos.mucalog.api.controller;
 import java.util.List;
 
 import javax.validation.Valid;
-
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mucasantos.mucalog.api.assembler.EntregaAssembler;
 import com.mucasantos.mucalog.api.model.EntregaModel;
+import com.mucasantos.mucalog.api.model.input.EntregaInputModel;
 import com.mucasantos.mucalog.domain.model.Entrega;
 import com.mucasantos.mucalog.domain.repository.EntregaRepository;
 import com.mucasantos.mucalog.domain.service.SolicitaEntregaService;
@@ -47,9 +46,12 @@ public class EntregaController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public EntregaModel solicitar(@Valid @RequestBody Entrega entrega ) {
+	public EntregaModel solicitar(@Valid @RequestBody EntregaInputModel entrega ) {
 		
-		return entregaAssembler.toModel( solicitaEntregaService.solicitar(entrega) );
+		Entrega novaEntrega = entregaAssembler.toEntity(entrega);
+		Entrega entregaSolicitada = solicitaEntregaService.solicitar(novaEntrega);
+		
+		return entregaAssembler.toModel(  entregaSolicitada );
 	}
 	
 	@GetMapping

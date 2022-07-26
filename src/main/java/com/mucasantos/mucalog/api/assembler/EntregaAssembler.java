@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import com.mucasantos.mucalog.api.model.EntregaModel;
+import com.mucasantos.mucalog.api.model.input.EntregaInputModel;
 import com.mucasantos.mucalog.domain.model.Entrega;
 
 @Component
@@ -30,6 +31,11 @@ public class EntregaAssembler {
 		return entregas.stream()
 				.map(this::toModel)
 				.collect(Collectors.toList());
+	}
+	
+	
+	public Entrega toEntity(EntregaInputModel entregaInput) {
+		return modelMapper.map(entregaInput, Entrega.class);
 	}
 }
 
