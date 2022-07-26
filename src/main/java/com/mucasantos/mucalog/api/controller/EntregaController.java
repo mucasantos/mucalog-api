@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mucasantos.mucalog.api.assembler.EntregaAssembler;
 import com.mucasantos.mucalog.api.model.EntregaModel;
 import com.mucasantos.mucalog.domain.model.Entrega;
 import com.mucasantos.mucalog.domain.repository.EntregaRepository;
@@ -32,27 +33,28 @@ public class EntregaController {
 	private EntregaRepository entregaRepository;
 	
 	
-	private ModelMapper modelMapper;
+	private EntregaAssembler entregaAssembler;
 	
 	
+
 	public EntregaController(SolicitaEntregaService solicitaEntregaService, EntregaRepository entregaRepository,
-			ModelMapper modelMapper) {
+			EntregaAssembler entregaAssembler) {
 		super();
 		this.solicitaEntregaService = solicitaEntregaService;
 		this.entregaRepository = entregaRepository;
-		this.modelMapper = modelMapper;
+		this.entregaAssembler = entregaAssembler;
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Entrega solicitar(@Valid @RequestBody Entrega entrega ) {
+	public EntregaModel solicitar(@Valid @RequestBody Entrega entrega ) {
 		
-		return solicitaEntregaService.solicitar(entrega);
+		return entregaAssembler.toModel( solicitaEntregaService.solicitar(entrega) );
 	}
 	
 	@GetMapping
-	public List<Entrega> listar(){
-		return entregaRepository.findAll();
+	public List<EntregaModel> listar(){
+		return entregaAssembler.toCollectionModel( entregaRepository.findAll() );
 	}
 	
 	
@@ -61,9 +63,8 @@ public class EntregaController {
 		
 		return entregaRepository.findById(entregaId)
 				.map(entrega -> {
-					EntregaModel entregaModel = modelMapper.map(entrega, EntregaModel.class);
 					
-					return ResponseEntity.ok(entregaModel);
+					return ResponseEntity.ok(entregaAssembler.toModel(entrega));
 				})
 				.orElse(ResponseEntity.notFound().build());
 	}
