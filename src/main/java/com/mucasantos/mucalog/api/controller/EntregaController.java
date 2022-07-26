@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mucasantos.mucalog.api.model.EntregaModel;
 import com.mucasantos.mucalog.domain.model.Entrega;
 import com.mucasantos.mucalog.domain.repository.EntregaRepository;
 import com.mucasantos.mucalog.domain.service.SolicitaEntregaService;
@@ -28,7 +30,18 @@ public class EntregaController {
 	
 	@Autowired
 	private EntregaRepository entregaRepository;
-
+	
+	
+	private ModelMapper modelMapper;
+	
+	
+	public EntregaController(SolicitaEntregaService solicitaEntregaService, EntregaRepository entregaRepository,
+			ModelMapper modelMapper) {
+		super();
+		this.solicitaEntregaService = solicitaEntregaService;
+		this.entregaRepository = entregaRepository;
+		this.modelMapper = modelMapper;
+	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
@@ -44,10 +57,14 @@ public class EntregaController {
 	
 	
 	@GetMapping("/{entregaId}")
-	public ResponseEntity<Entrega> buscar (@PathVariable Long entregaId) {
+	public ResponseEntity<EntregaModel> buscar (@PathVariable Long entregaId) {
 		
 		return entregaRepository.findById(entregaId)
-				.map(ResponseEntity :: ok)
+				.map(entrega -> {
+					EntregaModel entregaModel = modelMapper.map(entrega, EntregaModel.class);
+					
+					return ResponseEntity.ok(entregaModel);
+				})
 				.orElse(ResponseEntity.notFound().build());
 	}
 }
